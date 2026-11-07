@@ -1,0 +1,143 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-initial-schema
+      author: kaiju
+      changes:
+        - createTable:
+            tableName: users
+            remarks: 用户账号与可扩展资料
+            columns:
+              - column:
+                  name: id
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_users_username
+              - column:
+                  name: email
+                  type: varchar(320)
+              - column:
+                  name: nickname
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_users_nickname
+              - column:
+                  name: password_hash
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password_salt
+                  type: varchar(64)
+              - column:
+                  name: role
+                  type: varchar(16)
+                  defaultValue: user
+                  constraints:
+                    nullable: false
+              - column:
+                  name: uid
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_users_uid
+              - column:
+                  name: profile
+                  type: json
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: datetime(3)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: documents
+            remarks: 业务聚合 JSON，按集合与业务 id 索引
+            columns:
+              - column:
+                  name: seq
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_documents_seq
+              - column:
+                  name: collection
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: id
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: owner_id
+                  type: varchar(64)
+              - column:
+                  name: data
+                  type: json
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: datetime(3)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: documents
+            columnNames: collection, id
+            constraintName: pk_documents
+        - createIndex:
+            tableName: documents
+            indexName: idx_documents_collection_seq
+            columns:
+              - column:
+                  name: collection
+              - column:
+                  name: seq
+        - createIndex:
+            tableName: documents
+            indexName: idx_documents_owner
+            columns:
+              - column:
+                  name: owner_id
+        - createTable:
+            tableName: app_meta
+            remarks: 单实例服务端元数据
+            columns:
+              - column:
+                  name: meta_key
+                  type: varchar(128)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: meta_value
+                  type: text
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: app_meta
+        - dropTable:
+            tableName: documents
+        - dropTable:
+            tableName: users

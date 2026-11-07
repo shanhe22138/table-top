@@ -1,0 +1,9 @@
+.git
+node_modules
+data
+shots
+scripts
+backend/target/classes
+backend/target/test-classes
+backend/target/surefire-reports
+*.log

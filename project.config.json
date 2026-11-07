@@ -1,0 +1,13 @@
+{
+  "appid": "wx061ee089b5d462c6",
+  "projectname": "table-top",
+  "miniprogramRoot": "dist-weapp/",
+  "compileType": "miniprogram",
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": false
+  },
+  "condition": {}
+}

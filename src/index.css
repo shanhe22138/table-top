@@ -1,0 +1,337 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink: #100e0d;
+  --color-surface: #191614;
+  --color-surface2: #211d1a;
+  --color-surface3: #2a2420;
+  --color-line: #322b26;
+  --color-line2: #423931;
+  --color-paper: #f4efe9;
+  --color-muted: #a2968c;
+  --color-faint: #6f655d;
+  --color-brass: #e2a85a;
+  --color-brassdim: #8a6a3e;
+  --color-seal: #c4563c;
+  --color-jade: #5fa88b;
+
+  --font-display: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong', 'SimSun', serif;
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  page {
+    --color-ink: #100e0d;
+    --color-surface: #191614;
+    --color-surface2: #211d1a;
+    --color-surface3: #2a2420;
+    --color-line: #322b26;
+    --color-line2: #423931;
+    --color-paper: #f4efe9;
+    --color-muted: #a2968c;
+    --color-faint: #6f655d;
+    --color-brass: #e2a85a;
+    --color-brassdim: #8a6a3e;
+    --color-seal: #c4563c;
+    --color-jade: #5fa88b;
+    --font-sans: system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --font-display: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+    min-height: 100%;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-brass) 35%, transparent);
+    color: #fff;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line2) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-line2);
+    border-radius: 99px;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  input,
+  textarea,
+  select {
+    background: var(--color-surface2);
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    outline: none;
+    width: 100%;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--color-brassdim);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-brass) 12%, transparent);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-faint);
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+
+  .hairline {
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes slideNext {
+  from {
+    opacity: 0;
+    transform: translateX(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes slidePrev {
+  from {
+    opacity: 0;
+    transform: translateX(-26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.anim-rise {
+  animation: rise 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-fade {
+  animation: fade 0.24s ease both;
+}
+
+.anim-sheet {
+  animation: sheetUp 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-slide-next {
+  animation: slideNext 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-slide-prev {
+  animation: slidePrev 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 双滑块：两个 input 叠在一起，只有滑块本身接收指针事件 */
+.dual-range {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 34px;
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translateY(-50%);
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.dual-range:focus {
+  box-shadow: none !important;
+}
+
+.dual-range::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 32px;
+}
+
+.dual-range::-webkit-slider-thumb {
+  pointer-events: auto;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: var(--color-brass);
+  border: 2px solid #100e0d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  cursor: grab;
+}
+
+.dual-range::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  background: #eeb96f;
+}
+
+.dual-range::-moz-range-track {
+  background: transparent;
+  height: 32px;
+}
+
+.dual-range::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--color-brass);
+  border: 2px solid #100e0d;
+  cursor: grab;
+}
+
+/* 单值滑块：预计时长等只有一个手柄的地方 */
+.single-range {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 34px;
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.single-range:focus {
+  box-shadow: none !important;
+}
+
+.single-range::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 32px;
+}
+
+.single-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: var(--color-brass);
+  border: 2px solid #100e0d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  cursor: grab;
+}
+
+.single-range::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  background: #eeb96f;
+}
+
+.single-range::-moz-range-track {
+  background: transparent;
+  height: 32px;
+}
+
+.single-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--color-brass);
+  border: 2px solid #100e0d;
+  cursor: grab;
+}

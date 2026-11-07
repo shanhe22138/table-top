@@ -1,0 +1,21 @@
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: table_top
+      MYSQL_USER: table_top
+      MYSQL_PASSWORD: table_top_dev_password
+      MYSQL_ROOT_PASSWORD: table_top_root_dev_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - table-top-mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ptable_top_root_dev_password"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  table-top-mysql:

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-h5/
+dist-weapp/
+backend/target/
+.swc/
+data/
+*.log
+.DS_Store

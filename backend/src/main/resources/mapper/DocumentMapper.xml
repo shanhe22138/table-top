@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tabletop.mapper.DocumentMapper">
+  <resultMap id="documentMap" type="com.tabletop.model.DocumentEntity">
+    <id property="collection" column="collection"/>
+    <id property="id" column="id"/>
+    <result property="seq" column="seq"/>
+    <result property="ownerId" column="owner_id"/>
+    <result property="data" column="data" typeHandler="com.tabletop.persistence.FastjsonMapTypeHandler"/>
+    <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+
+  <select id="findById" resultMap="documentMap">
+    SELECT seq, collection, id, owner_id, data, updated_at FROM documents
+    WHERE collection = #{collection} AND id = #{id}
+  </select>
+  <select id="findByCollection" resultMap="documentMap">
+    SELECT seq, collection, id, owner_id, data, updated_at FROM documents
+    WHERE collection = #{collection} ORDER BY seq
+  </select>
+  <select id="findRecent" resultMap="documentMap">
+    SELECT seq, collection, id, owner_id, data, updated_at FROM documents
+    WHERE collection = #{collection} ORDER BY seq DESC LIMIT #{limit}
+  </select>
+  <select id="count" resultType="long">SELECT COUNT(*) FROM documents</select>
+
+  <insert id="insert" parameterType="com.tabletop.model.DocumentEntity">
+    INSERT INTO documents (collection, id, owner_id, data, updated_at)
+    VALUES (#{collection}, #{id}, #{ownerId},
+      #{data,typeHandler=com.tabletop.persistence.FastjsonMapTypeHandler}, #{updatedAt})
+  </insert>
+  <update id="update" parameterType="com.tabletop.model.DocumentEntity">
+    UPDATE documents SET owner_id = #{ownerId},
+      data = #{data,typeHandler=com.tabletop.persistence.FastjsonMapTypeHandler}, updated_at = #{updatedAt}
+    WHERE collection = #{collection} AND id = #{id}
+  </update>
+  <delete id="delete">DELETE FROM documents WHERE collection = #{collection} AND id = #{id}</delete>
+</mapper>

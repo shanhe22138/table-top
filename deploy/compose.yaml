@@ -1,0 +1,42 @@
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-table_top}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ${DEPLOY_DIR:-/srv/table-top}/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -p${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    logging:
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  app:
+    image: table-top-app:${DEPLOY_IMAGE_TAG:-1.0.0}
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      MYSQL_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-table_top}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      AUTH_SECRET: ${AUTH_SECRET}
+      SQLITE_IMPORT_PATH: ${SQLITE_IMPORT_PATH:-}
+      TABLE_TOP_STATIC_DIR: /app/dist
+    volumes:
+      - ${DEPLOY_DIR:-/srv/table-top}/data:/app/legacy:ro
+    ports:
+      - "0.0.0.0:80:8787"
+    logging:
+      options:
+        max-size: "20m"
+        max-file: "3"
